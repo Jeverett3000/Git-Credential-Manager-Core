@@ -26,7 +26,6 @@ namespace Atlassian.Bitbucket
         Task<bool> ShowOAuthRequiredPromptAsync();
         Task<OAuth2TokenResult> CreateOAuthCredentialsAsync(Uri targetUri);
         Task<OAuth2TokenResult> RefreshOAuthCredentialsAsync(string refreshToken);
-        void ThrowIfUserInteractionDisabled();
     }
 
     public class BitbucketAuthentication : AuthenticationBase, IBitbucketAuthentication
@@ -130,6 +129,8 @@ namespace Atlassian.Bitbucket
 
         public async Task<OAuth2TokenResult> CreateOAuthCredentialsAsync(Uri targetUri)
         {
+            ThrowIfUserInteractionDisabled();
+
             var oauthClient = new BitbucketOAuth2Client(HttpClient, Context.Settings);
 
             var browserOptions = new OAuth2WebBrowserOptions
@@ -177,10 +178,5 @@ namespace Atlassian.Bitbucket
         }
 
         #endregion
-
-        public void ThrowIfUserInteractionDisabled()
-        {
-            base.ThrowIfUserInteractionDisabled();
-        }
     }
 }
